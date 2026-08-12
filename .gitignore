@@ -28,10 +28,6 @@ Thumbs.db
 # Test / coverage
 coverage/
 
-# Prisma generated client
-# Don't ignore this if your generated client is needed locally
-# src/generated/prisma/
-
 # Temporary files
 tmp/
 temp/
