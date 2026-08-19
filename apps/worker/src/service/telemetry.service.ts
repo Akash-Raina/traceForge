@@ -1,4 +1,4 @@
-import { ingestionDataInput } from "../../../api/src/schema/ingestion.schema";
+import {type ingestionDataInput} from "@traceforge/shared"
 import { prisma } from "../lib/prisma";
 import { toPrismaJson } from "../utils/toPrismaJson";
 

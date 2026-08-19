@@ -24,9 +24,20 @@ const spanSchema = z.object({
   parentSpanId: z.string().nullable().optional(),
 
   name: z.string(),
-  type: z.enum(["AGENT", "LLM", "TOOL", "RETRIEVAL", "CUSTOM"]),
 
-  status: z.enum(["RUNNING", "SUCCESS", "ERROR"]),
+  type: z.enum([
+    "AGENT",
+    "LLM",
+    "TOOL",
+    "RETRIEVAL",
+    "CUSTOM",
+  ]),
+
+  status: z.enum([
+    "RUNNING",
+    "SUCCESS",
+    "ERROR",
+  ]),
 
   startedAt: z.coerce.date(),
   endedAt: z.coerce.date().optional(),
@@ -51,7 +62,11 @@ const traceSchema = z.object({
   startedAt: z.coerce.date(),
   endedAt: z.coerce.date().optional(),
 
-  status: z.enum(["RUNNING", "SUCCESS", "ERROR"]),
+  status: z.enum([
+    "RUNNING",
+    "SUCCESS",
+    "ERROR",
+  ]),
 });
 
 export const ingestionSchema = z.object({

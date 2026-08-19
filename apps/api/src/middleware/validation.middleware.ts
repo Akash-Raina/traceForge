@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { apiKeyHeaderSchema } from "../schema/api-key.schema.js";
-import { ingestionSchema } from "../schema/ingestion.schema.js";
+import { ingestionSchema } from "@traceforge/shared";
 import { createProjectSchema } from "../schema/project.schema.js";
 
 export const validateCreateProject = (
