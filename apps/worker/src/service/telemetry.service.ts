@@ -1,4 +1,4 @@
-import {type ingestionDataInput} from "@traceforge/shared"
+import { type ingestionDataInput } from "@traceforge/shared";
 import { prisma } from "../lib/prisma";
 import { toPrismaJson } from "../utils/toPrismaJson";
 
@@ -9,8 +9,12 @@ export async function addTelemetryToDB(
   const { trace, spans } = data;
 
   await prisma.$transaction(async (txn) => {
-    await txn.trace.create({
-      data: {
+    await txn.trace.upsert({
+      where: {
+        id: trace.id,
+      },
+
+      create: {
         id: trace.id,
         name: trace.name,
         projectId,
@@ -18,6 +22,8 @@ export async function addTelemetryToDB(
         endedAt: trace.endedAt,
         status: trace.status,
       },
+
+      update: {},
     });
     await txn.span.createMany({
       data: spans.map((span) => ({
@@ -38,6 +44,7 @@ export async function addTelemetryToDB(
         outputTokens: span.outputTokens,
         cost: span.cost,
       })),
+      skipDuplicates: true,
     });
   });
 }
