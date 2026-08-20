@@ -1,9 +1,9 @@
 import { TraceForge } from "@traceforge/sdk";
+import "dotenv/config";
 
 const traceforge = new TraceForge({
-  apiKey:
-    "tf_live_3ba210af9380d852c90073e503d823a3b60d168ae2b11ea7b5f21017a061d1de",
-  endpoint: "http://localhost:8000/api/v1",
+  apiKey: process.env.TRACEFORGE_API_KEY!,
+  endpoint: process.env.TRACEFORGE_ENDPOINT!,
 });
 
 const trace = traceforge.startTrace("customer-support");

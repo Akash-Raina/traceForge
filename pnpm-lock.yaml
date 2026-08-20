@@ -267,6 +267,9 @@ importers:
       '@traceforge/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
     devDependencies:
       tsx:
         specifier: ^4.0.0
