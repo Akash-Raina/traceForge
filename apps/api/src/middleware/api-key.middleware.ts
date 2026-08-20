@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { prisma } from "../lib/prisma.js";
 import { hashApiKey } from "../utils/api-Key.js";
 
-export const ingestionAuth = async (
+export const apiKeyAuth = async (
   req: Request,
   res: Response,
   next: NextFunction,

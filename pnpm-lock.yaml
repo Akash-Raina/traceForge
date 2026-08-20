@@ -262,6 +262,19 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
+  apps/sdk-test:
+    dependencies:
+      '@traceforge/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+    devDependencies:
+      tsx:
+        specifier: ^4.0.0
+        version: 4.23.5
+      typescript:
+        specifier: ^6.0.0
+        version: 6.0.3
+
   apps/worker:
     dependencies:
       '@prisma/adapter-pg':
@@ -301,6 +314,8 @@ importers:
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
+
+  packages/sdk: {}
 
   packages/shared:
     dependencies:
@@ -1585,6 +1600,11 @@ packages:
     resolution: {integrity: sha512-faYHw0anBbc/kWF3zFTEnxSFOAGUX9GFbOBthvDdLsIlEoWOFOtS0zgCiQYwIskL9iGXZL3kAXD8OoZ4GmMATA==}
     engines: {node: '>= 18'}
 
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   typescript@7.0.2:
     resolution: {integrity: sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==}
     engines: {node: '>=16.20.0'}
@@ -2844,6 +2864,8 @@ snapshots:
       content-type: 2.0.0
       media-typer: 1.1.1
       mime-types: 3.0.2
+
+  typescript@6.0.3: {}
 
   typescript@7.0.2:
     optionalDependencies:
