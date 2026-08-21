@@ -8,7 +8,15 @@ const traceforge = new TraceForge({
 
 const trace = traceforge.startTrace("customer-support");
 
-const retrieval = trace.startSpan("document-retrieval", "RETRIEVAL");
+const agent = trace.startSpan(
+  "customer-support-agent",
+  "AGENT",
+);
+
+const retrieval = agent.startSpan(
+  "document-retrieval",
+  "RETRIEVAL",
+);
 
 retrieval.end({
   input: {
@@ -19,7 +27,10 @@ retrieval.end({
   },
 });
 
-const llm = trace.startSpan("llm-call", "LLM");
+const llm = agent.startSpan(
+  "llm-call",
+  "LLM",
+);
 
 llm.end({
   input: {
@@ -34,6 +45,8 @@ llm.end({
   outputTokens: 12,
   cost: 0.002,
 });
+
+agent.end();
 
 await trace.end();
 

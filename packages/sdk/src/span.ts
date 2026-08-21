@@ -28,6 +28,10 @@ export class Span {
     this.startedAt = new Date();
   }
 
+  startSpan(name: string, type: SpanType){
+    return new Span(name, type, this.id);
+  }
+
   end(data?: {
     input?: JsonValue;
     output?: JsonValue;
