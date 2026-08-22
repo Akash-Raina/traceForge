@@ -28,3 +28,5 @@ export async function getTrace(traceId: string) {
 
   return response.json();
 }
+
+
