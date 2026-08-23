@@ -1,6 +1,6 @@
 import { type ingestionDataInput } from "@traceforge/shared";
-import { prisma } from "../lib/prisma";
-import { toPrismaJson } from "../utils/toPrismaJson";
+import { prisma } from "../lib/prisma.js";
+import { toPrismaJson } from "../utils/toPrismaJson.js";
 
 export async function addTelemetryToDB(
   projectId: string,

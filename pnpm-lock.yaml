@@ -357,6 +357,9 @@ importers:
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
+      express:
+        specifier: ^5.2.1
+        version: 5.2.1
       ioredis:
         specifier: ^6.0.0
         version: 6.0.0
@@ -364,6 +367,9 @@ importers:
         specifier: ^8.23.0
         version: 8.23.0
     devDependencies:
+      '@types/express':
+        specifier: ^5.0.6
+        version: 5.0.6
       '@types/node':
         specifier: ^26.1.2
         version: 26.1.2

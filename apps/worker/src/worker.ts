@@ -3,6 +3,22 @@ import { redis } from "./lib/redis.js";
 import { traceQueue } from "./queue/trace.queue.js";
 import { addTelemetryToDB } from "./service/telemetry.service.js";
 import { evaluateTrace } from "./service/evaluation.service.js";
+import express from "express";
+
+const app = express();
+
+const PORT = Number(process.env.PORT) || 3001;
+
+app.get("/health", (_req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "traceforge-worker",
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Worker health server running on port ${PORT}`);
+});
 
 
 const worker = new Worker(
