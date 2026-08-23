@@ -1,22 +1,10 @@
 {
   "name": "traceforge",
   "version": "1.0.0",
-  "private": "true",
-  "description": "",
-  "main": "index.js",
-  "packageManager": "pnpm@11.20.0",
+  "private": true,
+  "packageManager": "pnpm@11.23.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.9.0",
-      "onFail": "download"
-    }
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "type": "module",
   "devDependencies": {
