@@ -52,6 +52,37 @@ function TraceDetails({ trace, onBack }: TraceDetailProps) {
         <h2 className="mt-8 mb-4 text-xl font-semibold">Execution</h2>
 
         <SpanTree spans={trace.spans} />
+
+        {trace.evaluations.length > 0 && (
+          <div className="mt-8">
+            <h2 className="mb-4 text-xl font-semibold">Evaluations</h2>
+
+            <div className="space-y-3">
+              {trace.evaluations.map((evaluation) => (
+                <div
+                  key={evaluation.id}
+                  className="rounded-lg border bg-white p-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold">{evaluation.name}</h3>
+
+                    <span className="font-semibold">
+                      {(evaluation.score * 100).toFixed(0)}%
+                    </span>
+                  </div>
+
+                  <p className="mt-2 text-sm text-gray-600">
+                    {evaluation.reason}
+                  </p>
+
+                  <div className="mt-3 text-xs text-gray-400">
+                    {evaluation.provider} · {evaluation.model}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );

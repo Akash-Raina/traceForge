@@ -44,18 +44,32 @@ model Span {
 }
 
 model Trace {
-  id        String      @id
-  projectId String
-  name      String
-  startedAt DateTime
-  endedAt   DateTime?
-  status    TraceStatus
-  createdAt DateTime    @default(now())
-  Span      Span[]
-  Project   Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  id         String       @id
+  projectId  String
+  name       String
+  startedAt  DateTime
+  endedAt    DateTime?
+  status     TraceStatus
+  createdAt  DateTime     @default(now())
+  Evaluation Evaluation[]
+  Span       Span[]
+  Project    Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@index([projectId])
   @@index([projectId, startedAt])
+}
+
+model Evaluation {
+  id        String        @id @default(uuid())
+  traceId   String
+  spanId    String?
+  name      String
+  score     Float
+  reason    String
+  provider  String
+  model     String
+  createdAt DateTime @default(now())
+  Trace     Trace    @relation(fields: [traceId], references: [id])
 }
 
 enum SpanStatus {

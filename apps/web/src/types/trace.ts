@@ -37,3 +37,20 @@ export interface TraceDetailResponse {
   success: boolean;
   trace: TraceDetail;
 }
+
+export interface Evaluation {
+  id: string;
+  traceId: string;
+  spanId?: string | null;
+  name: string;
+  score: number;
+  reason: string;
+  provider: string;
+  model: string;
+  createdAt: string;
+}
+
+export interface TraceDetail extends Trace {
+  spans: Span[];
+  evaluations: Evaluation[];
+}

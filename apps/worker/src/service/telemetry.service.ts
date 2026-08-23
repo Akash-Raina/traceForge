@@ -8,8 +8,8 @@ export async function addTelemetryToDB(
 ) {
   const { trace, spans } = data;
 
-  await prisma.$transaction(async (txn) => {
-    await txn.trace.upsert({
+  const storedTrace = await prisma.$transaction(async (txn) => {
+    const traceData = await txn.trace.upsert({
       where: {
         id: trace.id,
       },
@@ -46,5 +46,8 @@ export async function addTelemetryToDB(
       })),
       skipDuplicates: true,
     });
+    return traceData;
   });
+
+  return storedTrace;
 }

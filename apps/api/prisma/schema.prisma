@@ -31,7 +31,8 @@ model Trace {
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  spans Span[]
+  spans       Span[]
+  evaluations Evaluation[]
 
   @@index([projectId])
   @@index([projectId, startedAt])
@@ -73,6 +74,23 @@ model Span {
   @@index([traceId])
   @@index([traceId, startedAt])
   @@index([parentSpanId])
+}
+
+model Evaluation {
+  id      String  @id @default(uuid())
+  traceId String
+  spanId  String?
+
+  name   String
+  score  Float
+  reason String
+
+  provider String
+  model    String
+
+  createdAt DateTime @default(now())
+
+  trace Trace @relation(fields: [traceId], references: [id])
 }
 
 enum TraceStatus {

@@ -6,47 +6,35 @@ const traceforge = new TraceForge({
   endpoint: process.env.TRACEFORGE_ENDPOINT!,
 });
 
-const trace = traceforge.startTrace("customer-support");
+const trace = traceforge.startTrace("technical-support");
 
-const agent = trace.startSpan(
-  "customer-support-agent",
-  "AGENT",
-);
-
-const retrieval = agent.startSpan(
-  "document-retrieval",
-  "RETRIEVAL",
-);
+const retrieval = trace.startSpan("knowledge-retrieval", "RETRIEVAL");
 
 retrieval.end({
   input: {
-    query: "What is the refund policy?",
+    query: "How do I reset my password?",
   },
   output: {
-    documents: ["refund-policy.pdf"],
+    documents: ["account-security-guide.pdf", "password-reset-guide.pdf"],
   },
 });
 
-const llm = agent.startSpan(
-  "llm-call",
-  "LLM",
-);
+const llm = trace.startSpan("llm-call", "LLM");
 
 llm.end({
   input: {
-    prompt: "What is the refund policy?",
+    prompt: "How do I reset my password?",
   },
   output: {
-    response: "Customers can request a refund within 30 days.",
+    response:
+      "Go to Settings, select Security, click Reset Password, and follow the instructions sent to your email.",
   },
   model: "test-model",
   provider: "test-provider",
-  inputTokens: 20,
-  outputTokens: 12,
-  cost: 0.002,
+  inputTokens: 22,
+  outputTokens: 24,
+  cost: 0.0025,
 });
-
-agent.end();
 
 await trace.end();
 

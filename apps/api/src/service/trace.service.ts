@@ -20,6 +20,7 @@ export async function getTrace(projectId: string, traceId: string) {
     },
     include: {
       spans: true,
+      evaluations: true
     },
   });
 
