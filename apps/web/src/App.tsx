@@ -1,24 +1,35 @@
 import { useEffect, useState } from "react";
 import TraceDetails from "./components/TraceDetails";
 import { getTrace, getTraces } from "./lib/api";
-import { getDuration } from "./lib/format";
-import type { Trace, TraceDetail as TraceDetailType } from "./types/trace";
+import type {
+  Trace,
+  TraceDetail,
+  TraceDetailResponse,
+  TracesResponse,
+} from "./types/trace";
 
 function App() {
   const [traces, setTraces] = useState<Trace[]>([]);
+  const [noTraces, setNoTraces] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const [selectedTraceId, setSelectedTraceId] = useState<string | null>(null);
+  const [traceData, setTraceData] = useState<TraceDetail | null>(null);
 
-  const [selectedTrace, setSelectedTrace] = useState<TraceDetailType | null>(
-    null,
-  );
+  const [traceId, setTraceId] = useState<string | null>(null);
+
+  const [showTraceDetails, setShowTraceDetails] = useState(false);
 
   // Fetch all traces
   useEffect(() => {
     getTraces()
-      .then((response) => {
-        setTraces(response.data);
+      .then((response: TracesResponse) => {
+        console.log("traces response", response);
+
+        setTraces(response.traces);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch traces:", error);
+        setNoTraces(true);
       })
       .finally(() => {
         setLoading(false);
@@ -27,58 +38,64 @@ function App() {
 
   // Fetch selected trace
   useEffect(() => {
-    if (!selectedTraceId) return;
-    
-    getTrace(selectedTraceId).then((response) => {
-      setSelectedTrace(response.trace);
-    });
-  }, [selectedTraceId]);
+    if (!traceId) return;
 
-  if (loading) {
-    return <div className="p-8">Loading traces...</div>;
-  }
+    getTrace(traceId)
+      .then((response: TraceDetailResponse) => {
+        console.log("trace response", response);
 
-  // Show trace detail
-  if (selectedTraceId) {
-    if (!selectedTrace) {
-      return <div className="p-8">Loading trace...</div>;
-    }
+        setTraceData(response.trace);
+        setShowTraceDetails(true);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch trace:", error);
+      })
+      .finally(() => {
+        // We can add trace-specific loading here later
+      });
+  }, [traceId]);
 
+  // Show trace details
+  if (showTraceDetails && traceData) {
     return (
       <TraceDetails
-        trace={selectedTrace}
+        trace={traceData}
         onBack={() => {
-          setSelectedTraceId(null);
-          setSelectedTrace(null);
+          setShowTraceDetails(false);
+          setTraceId(null);
+          setTraceData(null);
         }}
       />
     );
   }
 
-  // Show trace list
   return (
     <main className="min-h-screen bg-gray-500 p-8">
       <h1 className="mb-6 text-3xl font-bold">TraceForge</h1>
 
-      {traces.map((trace) => (
-        <div
-          key={trace.id}
-          onClick={() => setSelectedTraceId(trace.id)}
-          className="mb-3 cursor-pointer rounded-lg border bg-white p-4 hover:bg-gray-50"
-        >
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold">{trace.name}</h2>
-
-            <span className="text-sm">{trace.status}</span>
-          </div>
-
-          <div className="mt-2 flex gap-6 text-sm text-gray-500">
-            <span>Duration: {getDuration(trace.startedAt, trace.endedAt)}</span>
-
-            <span>{new Date(trace.startedAt).toLocaleString()}</span>
-          </div>
+      {loading ? (
+        <div>...loading traces</div>
+      ) : noTraces ? (
+        <div>Failed to fetch traces</div>
+      ) : traces.length === 0 ? (
+        <div>No traces found</div>
+      ) : (
+        <div className="space-y-3">
+          {traces.map((trace) => (
+            <div
+              key={trace.id}
+              className="cursor-pointer rounded border-2 bg-amber-300 p-4"
+              onClick={() => {
+                setTraceId(trace.id);
+              }}
+            >
+              <div>{trace.name}</div>
+              <div>{trace.startedAt}</div>
+              <div>{trace.status}</div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </main>
   );
 }

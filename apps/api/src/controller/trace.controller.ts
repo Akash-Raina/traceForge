@@ -7,7 +7,7 @@ export const getTraces = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      data: traces,
+      traces,
     });
   } catch (error) {
     res.status(500).json({
