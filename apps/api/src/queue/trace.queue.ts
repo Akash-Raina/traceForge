@@ -1,11 +1,11 @@
 import { Queue } from "bullmq";
-import {Redis} from "ioredis";
+import { Redis } from "ioredis";
+import "dotenv/config";
 
-const connection = new Redis({
-  host: "localhost",
-  port: 6379
-})
+const connection = new Redis(process.env.REDIS_URL!, {
+  maxRetriesPerRequest: null,
+});
 
 export const traceQueue = new Queue("trace-ingestion", {
-  connection
-})
+  connection,
+});

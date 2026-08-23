@@ -1,6 +1,7 @@
 import express from "express";
 import router from "./routes/index.js";
 import cors from "cors";
+import "dotenv/config"
 
 const app = express();
 
@@ -10,4 +11,6 @@ app.use(express.json());
 
 app.use("/api/v1", router);
 
-app.listen("8000");
+const PORT = Number((process.env.PORT) || 8000);
+
+app.listen(PORT);
