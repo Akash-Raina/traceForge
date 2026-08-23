@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import TraceDetails from "./components/TraceDetails";
 import { getTrace, getTraces } from "./lib/api";
 import type {
   Trace,
@@ -8,23 +7,23 @@ import type {
   TracesResponse,
 } from "./types/trace";
 
+import Sidebar from "./components/Sidebar";
+import TraceDetails from "./components/TraceDetails";
+import TraceList from "./components/TraceList";
+
 function App() {
   const [traces, setTraces] = useState<Trace[]>([]);
-  const [noTraces, setNoTraces] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const [traceData, setTraceData] = useState<TraceDetail | null>(null);
+  const [noTraces, setNoTraces] = useState(false);
 
   const [traceId, setTraceId] = useState<string | null>(null);
+  const [traceData, setTraceData] = useState<TraceDetail | null>(null);
 
   const [showTraceDetails, setShowTraceDetails] = useState(false);
 
-  // Fetch all traces
   useEffect(() => {
     getTraces()
       .then((response: TracesResponse) => {
-        console.log("traces response", response);
-
         setTraces(response.traces);
       })
       .catch((error) => {
@@ -36,67 +35,89 @@ function App() {
       });
   }, []);
 
-  // Fetch selected trace
   useEffect(() => {
     if (!traceId) return;
 
     getTrace(traceId)
       .then((response: TraceDetailResponse) => {
-        console.log("trace response", response);
-
         setTraceData(response.trace);
         setShowTraceDetails(true);
       })
       .catch((error) => {
         console.error("Failed to fetch trace:", error);
-      })
-      .finally(() => {
-        // We can add trace-specific loading here later
       });
   }, [traceId]);
 
-  // Show trace details
-  if (showTraceDetails && traceData) {
+  const handleSelectTrace = (id: string) => {
+    setTraceId(id);
+  };
+
+  const handleBack = () => {
+    setShowTraceDetails(false);
+    setTraceId(null);
+    setTraceData(null);
+  };
+
+  if (loading) {
     return (
-      <TraceDetails
-        trace={traceData}
-        onBack={() => {
-          setShowTraceDetails(false);
-          setTraceId(null);
-          setTraceData(null);
-        }}
-      />
+      <div className="flex min-h-screen items-center justify-center bg-[#F5F5EE]">
+        <p className="text-sm text-gray-500">Loading traces...</p>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-500 p-8">
-      <h1 className="mb-6 text-3xl font-bold">TraceForge</h1>
+    <div className="flex min-h-screen flex-col bg-[#F5F5EE] lg:flex-row">
+      <Sidebar />
 
-      {loading ? (
-        <div>...loading traces</div>
-      ) : noTraces ? (
-        <div>Failed to fetch traces</div>
-      ) : traces.length === 0 ? (
-        <div>No traces found</div>
-      ) : (
-        <div className="space-y-3">
-          {traces.map((trace) => (
-            <div
-              key={trace.id}
-              className="cursor-pointer rounded border-2 bg-amber-300 p-4"
-              onClick={() => {
-                setTraceId(trace.id);
-              }}
-            >
-              <div>{trace.name}</div>
-              <div>{trace.startedAt}</div>
-              <div>{trace.status}</div>
+      <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
+        {noTraces ? (
+          <div className="flex min-h-[80vh] items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-lg font-semibold">Failed to fetch traces</h1>
+
+              <p className="mt-2 text-sm text-gray-500">
+                Please try again later.
+              </p>
             </div>
-          ))}
-        </div>
-      )}
-    </main>
+          </div>
+        ) : (
+          <>
+            <div className="mb-6">
+              <h1 className="text-2xl font-semibold">Traces</h1>
+
+              <p className="mt-1 text-sm text-gray-500">
+                Monitor and inspect your AI application traces.
+              </p>
+            </div>
+
+            <div className="flex min-h-[calc(100vh-150px)] min-w-0 flex-col gap-4 xl:flex-row">
+              <TraceList
+                traces={traces}
+                selectedTraceId={traceId}
+                onSelect={handleSelectTrace}
+              />
+
+              {showTraceDetails && traceData ? (
+                <TraceDetails trace={traceData} onBack={handleBack} />
+              ) : (
+                <div className="flex min-h-125 min-w-0 flex-1 items-center justify-center rounded-2xl border border-black/5 bg-white/50 shadow-sm">
+                  <div className="text-center">
+                    <h2 className="font-medium text-gray-700">
+                      Select a trace
+                    </h2>
+
+                    <p className="mt-1 text-sm text-gray-400">
+                      Select a trace from the list to inspect its execution.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </main>
+    </div>
   );
 }
 
