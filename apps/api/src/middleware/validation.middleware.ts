@@ -42,6 +42,9 @@ export const validateApiKeyHeader = (
   res: Response,
   next: NextFunction,
 ) => {
+  console.log("🔥 INGEST HIT");
+  console.log("API KEY:", req.headers["x-api-key"]);
+  console.log("BODY:", JSON.stringify(req.body, null, 2));
   const result = apiKeyHeaderSchema.safeParse({
     "x-api-key": req.headers["x-api-key"],
   });

@@ -5,7 +5,14 @@ import "dotenv/config"
 
 const app = express();
 
+console.log("🚀 TraceForge API started");
+
 app.use(cors())
+
+app.use((req, _res, next) => {
+  console.log("➡️", req.method, req.originalUrl);
+  next();
+});
 
 app.use(express.json());
 
