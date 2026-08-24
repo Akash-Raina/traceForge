@@ -6,43 +6,65 @@ const traceforge = new TraceForge({
   endpoint: process.env.TRACEFORGE_ENDPOINT!,
 });
 
-const trace = traceforge.startTrace("code-generation");
+const trace = traceforge.startTrace("order-support");
 
-const retrieval = trace.startSpan("documentation-search", "RETRIEVAL");
+const retrieval = trace.startSpan(
+  "order-history-search",
+  "RETRIEVAL",
+);
 
 retrieval.end({
   input: {
-    query: "How do I implement JWT authentication in Express?",
+    query: "Find the latest order for customer #48291",
   },
   output: {
     documents: [
-      "express-authentication.md",
-      "jwt-best-practices.md",
-      "auth-middleware.md",
+      "order-98231.json",
+      "customer-48291.json",
     ],
   },
 });
 
-const llm = trace.startSpan("code-generation", "LLM");
+const tool = trace.startSpan(
+  "order-status-api",
+  "TOOL",
+);
+
+tool.end({
+  input: {
+    orderId: "ORD-98231",
+  },
+  output: {
+    orderId: "ORD-98231",
+    status: "SHIPPED",
+    estimatedDelivery: "2026-08-27",
+    carrier: "Delivery",
+  },
+});
+
+const llm = trace.startSpan(
+  "support-response",
+  "LLM",
+);
 
 llm.end({
   input: {
-    prompt: "Create an Express middleware that validates a JWT access token.",
+    customerMessage:
+      "Where is my order? I placed it three days ago.",
+    orderStatus: "SHIPPED",
+    estimatedDelivery: "2026-08-27",
   },
   output: {
-    response: `const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  // validate token...
-  next();
-};`,
+    response:
+      "Your order has been shipped and is currently in transit. It is expected to arrive by August 27, 2026.",
   },
   model: "gemini-3.6-flash",
   provider: "gemini",
-  inputTokens: 145,
-  outputTokens: 312,
-  cost: 0.0087,
+  inputTokens: 118,
+  outputTokens: 67,
+  cost: 0.0041,
 });
 
 await trace.end();
 
-console.log("Trace sent successfully");
+console.log("Order-support trace sent successfully");
